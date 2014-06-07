@@ -1,0 +1,47 @@
+#
+#	Match block for: <%= name %><% if match_string == '' %> has no valid conditions.<% end %>
+#
+<% if comment != '' -%>
+#	<%= comment %>
+#
+<% end -%>
+<% if match_string != '' -%>
+Match <%= match_string %>
+	# FIXME: available keywords are:
+	#AllowAgentForwarding
+	#AllowTcpForwarding
+<% if banner -%>
+	#Banner none
+	Banner	<%= banner %>
+<% end -%>
+	#ChrootDirectory
+	#ForceCommand
+	#GatewayPorts
+	#GSSAPIAuthentication
+	#HostbasedAuthentication
+	#KbdInteractiveAuthentication
+	#KerberosAuthentication
+	#KerberosUseKuserok
+	#MaxAuthTries
+	#MaxSessions
+	#PubkeyAuthentication
+<% if authorizedkeyscommand -%>
+	#AuthorizedKeysCommand none
+	AuthorizedKeysCommand		<%= authorizedkeyscommand %>
+<% end -%>
+<% if authorizedkeyscommandrunas != '' -%>
+	#AuthorizedKeysCommandRunAs ''
+	AuthorizedKeysCommandRunAs	<%= authorizedkeyscommandrunas %>
+<% end -%>
+	#PasswordAuthentication
+	#PermitEmptyPasswords
+	#PermitOpen
+	#PermitRootLogin
+	#RhostsRSAAuthentication
+	#RSAAuthentication
+	#X11DisplayOffset
+	#X11Forwarding
+	#X11UseLocalHost
+<% end -%>
+
+# vim: ts=8
