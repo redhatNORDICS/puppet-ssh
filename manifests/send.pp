@@ -36,10 +36,11 @@ define ssh::send(	# send...
 	}
 
 	# send to receiver...
-	@@ssh_authorized_key { "root@${::fqdn}":
+	#@@ssh_authorized_key { "root@${::fqdn}":
+	$params = {
 		user => 'root',
 		type => 'rsa',
-		tag => "ssh_key_root_${valid_name}",
+		xtag => "ssh_key_root_${valid_name}",
 		key => getvar("ssh_key_root_${::hostname}_rsa"),	# fact!
 		options => [
 			#"command=\"TODO\"",	# TODO: can this let argv through ?
@@ -51,6 +52,10 @@ define ssh::send(	# send...
 			#'no-pty'		# TODO: is this okay to add ?
 		],
 	}
+	# FIXME: puppet doesn't allow @@ in ensure_resource!
+	#ensure_resource('@@ssh_authorized_key', "root@${::fqdn}", $params)
+	ensure_resource('ssh::send::exported_ssh_authorized_key', "root@${::fqdn}", $params)
+
 }
 
 # vim: ts=8
