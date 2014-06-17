@@ -45,9 +45,6 @@ node 'host3.example.com' {
 	file { '/root/push-me':
 		content => "Hello from ${hostname}\n",
 	}
-	file { '/root/push-me-too':
-		content => "Hello again from ${hostname}\n",
-	}
 	# using a push is not recommended unless you really know what you want!
 	# push was *mostly* provided for symmetry with the ssh::file::push type
 	ssh::file::push { 'ssh-file-push-comment':
