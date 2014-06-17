@@ -79,9 +79,12 @@ define ssh::file::pull(	# formerly named: recv; pull was easier to think about!
 	$options = "-pq -o 'PasswordAuthentication=no' -o 'StrictHostKeyChecking=yes'"
 
 	# use the same mechanic to keep my own local copy of the file hashed...
-	# XXX: if multiple people want a file, it will cause a duplicate by
-	# exported resources all trying to add the same resource somewhere!
-	ssh::file::hash { "${valid_this}":
+	# NOTE: if multiple users all want a file, it will cause a duplicate by
+	# exported resources all clashing to add the same resource somewhere...
+	# to work around this puppet design bug, we use a wrapper to keep these
+	# types unique using ensure_resource and a unique (fake) wrapper $name!
+	ssh::file::hash::wrapper { "${::fqdn}_${valid_this}":
+		realname => "${valid_this}",
 		verify => $verify,
 	}
 
@@ -151,9 +154,8 @@ define ssh::file::pull(	# formerly named: recv; pull was easier to think about!
 	#}
 
 	# add a hash request on the src host, so it computes and exports one...
-	# FIXME: use my 'collecting duplicate (exported) resources in puppet' technique...
-	# https://ttboj.wordpress.com/2013/06/04/collecting-duplicate-resources-in-puppet/
-	@@ssh::file::hash { "${valid_file}":	# complete path of file on host
+	@@ssh::file::hash::wrapper { "__${::fqdn}_${valid_file}":	# __ !!
+		realname => "${valid_file}",	# complete path of file on host
 		tag => "${valid_host}",		# should usually be the fqdn...
 	}
 

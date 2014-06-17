@@ -37,7 +37,9 @@ class ssh::file(
 	}
 
 	# collect and compute all the file hashes that others have requested...
-	Ssh::File::Hash <<| tag == "${::fqdn}" |>> {
+	# NOTE: if we collected the real (ssh::file::hash) type, we would get a
+	# duplicate error. as a result, we collect the unique wrappers instead!
+	Ssh::File::Hash::Wrapper <<| tag == "${::fqdn}" |>> {
 	}
 
 	if $pair {
