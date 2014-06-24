@@ -27,6 +27,13 @@ define ssh::file::pull(	# formerly named: recv; pull was easier to think about!
 	# if either $path or $dest are used, then it overrides the $name value!
 	$path = '',	# dest path (a var so it can get overridden on collect)
 	$dest = '',	# dest file
+	# file properties...
+	$ensure = '',	# file ensure (setting to absent is a bad idea...)
+	$owner = '',	# file user
+	$group = '',	# file group
+	$mode = '',	# file mode
+	$backup = '',	# backup to filebucket ?
+	# special
 	$verify = true,	# verify the hash on *every* run or rely only on mtime?
 	$pair = true,
 	$fast = false
@@ -152,6 +159,39 @@ define ssh::file::pull(	# formerly named: recv; pull was easier to think about!
 	#	notify => TODO: puppet-poke,
 	#	require => Exec["ssh-file-pull-scp-${name}"],
 	#}
+
+	# tag the file so it doesn't get purged-- these settings are compatible
+	# with: scp -p and won't cause repeated copying! see the clarification:
+	# > Does mtime ever change on owner/group/mode changes?
+	# Only on filesystems that violate POSIX (although offhand I'm not sure
+	# what filesystems, if any, that would include). POSIX is quite clear
+	# that mtime is not affected by chown or chmod. -- eblake
+	if ($ensure != '') or ($owner != '') or ($group != '') or ($mode != '') or ($backup != '') {
+		file { "${valid_this}":
+			ensure => $ensure ? {
+				# by default, ensure this exists...
+				'' => present,
+				default => $ensure,
+			},
+			owner => $owner ? {
+				'' => undef,
+				default => $owner,
+			},
+			group => $group ? {
+				'' => undef,
+				default => $group,
+			},
+			mode => $mode ? {
+				'' => undef,
+				default => $mode,
+			},
+			backup => $backup ? {
+				'' => undef,
+				default => $backup,
+			},
+			require => Exec["ssh-file-pull-scp-${name}"],
+		}
+	}
 
 	# add a hash request on the src host, so it computes and exports one...
 	@@ssh::file::hash::wrapper { "__${::fqdn}_${valid_file}":	# __ !!
