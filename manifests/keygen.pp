@@ -44,7 +44,7 @@ define ssh::keygen(				# TODO: $name is unused for now
 
 	$bits_input = $bits ? {		# pick a default if not user specified!
 		'' => $bits_default,
-		default => abs(inline_template('<%= bits.to_i %>'))	# ensure an int
+		default => abs(inline_template('<%= @bits.to_i %>'))	# ensure an int
 	}
 
 	$valid_bits = $valid_type ? {
@@ -58,7 +58,7 @@ define ssh::keygen(				# TODO: $name is unused for now
 	}
 
 	# TODO: should we also check that a sane bit length was chosen ?
-	$rsa_validation = inline_template('<%= ((valid_bits.is_a?(Integer) and (valid_bits >= 768)) ? "pass":"fail") %>')
+	$rsa_validation = inline_template('<%= ((@valid_bits.is_a?(Integer) and (@valid_bits >= 768)) ? "pass":"fail") %>')
 	if (("${valid_type}" == 'rsa') or ("${valid_type}" == 'rsa1')) and "${rsa_validation}" != 'pass' {
 		fail("SSH key type: '${valid_type}', length: '${valid_bits}', did not pass bit length validation.")
 	}

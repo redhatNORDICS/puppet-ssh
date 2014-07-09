@@ -52,16 +52,16 @@ define ssh::match(
 	include ssh::server
 
 	# build each match condition (if it exists)
-	$user_string = inline_template('<% if user != [] %>User <%= user.join(",") %><% end %>')
-	$group_string = inline_template('<% if group != [] %>Group <%= group.join(",") %><% end %>')
-	$host_string = inline_template('<% if host != [] %>Host <%= host.join(",") %><% end %>')
-	$address_string = inline_template('<% if address != [] %>Address <%= address.join(",") %><% end %>')
+	$user_string = inline_template('<% if @user != [] %>User <%= @user.join(",") %><% end %>')
+	$group_string = inline_template('<% if @group != [] %>Group <%= @group.join(",") %><% end %>')
+	$host_string = inline_template('<% if @host != [] %>Host <%= @host.join(",") %><% end %>')
+	$address_string = inline_template('<% if @address != [] %>Address <%= @address.join(",") %><% end %>')
 
 	# store all the match conditions in a list
 	$match_list = ["${user_string}", "${group_string}", "${host_string}", "${address_string}"]
 
 	# join all non-empty match conditions with a ' '. They are logically AND-ed together.
-	$match_string = inline_template('<%= match_list.delete_if {|x| x.empty? }.join(" ") %>')
+	$match_string = inline_template('<%= @match_list.delete_if {|x| x.empty? }.join(" ") %>')
 
 	if $match_string == '' {
 		fail('You must specify at least one match condition.')

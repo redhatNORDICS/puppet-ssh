@@ -47,16 +47,16 @@ SyslogFacility AUTHPRIV
 #RSAAuthentication yes
 #PubkeyAuthentication yes
 #AuthorizedKeysFile		.ssh/authorized_keys
-<% if keyword_authorizedkeysfile -%>
-AuthorizedKeysFile		<%= keyword_authorizedkeysfile %>
+<% if @keyword_authorizedkeysfile -%>
+AuthorizedKeysFile		<%= @keyword_authorizedkeysfile %>
 <% end -%>
 #AuthorizedKeysCommand none
-<% if authorizedkeyscommand -%>
-AuthorizedKeysCommand		<%= authorizedkeyscommand %>
+<% if @authorizedkeyscommand -%>
+AuthorizedKeysCommand		<%= @authorizedkeyscommand %>
 <% end -%>
 #AuthorizedKeysCommandRunAs ''
-<% if authorizedkeyscommandrunas != '' -%>
-AuthorizedKeysCommandRunAs	<%= authorizedkeyscommandrunas %>
+<% if @authorizedkeyscommandrunas != '' -%>
+AuthorizedKeysCommandRunAs	<%= @authorizedkeyscommandrunas %>
 <% end -%>
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
@@ -136,8 +136,8 @@ X11Forwarding yes
 
 # no default banner path
 #Banner none
-<% if banner -%>
-Banner	<%= banner %>
+<% if @banner -%>
+Banner	<%= @banner %>
 <% end -%>
 
 # override default of no subsystems

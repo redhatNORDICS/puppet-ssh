@@ -1,18 +1,18 @@
 #
 #	Match block for: <%= name %><% if match_string == '' %> has no valid conditions.<% end %>
 #
-<% if comment != '' -%>
-#	<%= comment %>
+<% if @comment != '' -%>
+#	<%= @comment %>
 #
 <% end -%>
-<% if match_string != '' -%>
-Match <%= match_string %>
+<% if @match_string != '' -%>
+Match <%= @match_string %>
 	# FIXME: available keywords are:
 	#AllowAgentForwarding
 	#AllowTcpForwarding
-<% if banner -%>
+<% if @banner -%>
 	#Banner none
-	Banner	<%= banner %>
+	Banner	<%= @banner %>
 <% end -%>
 	#ChrootDirectory
 	#ForceCommand
@@ -25,13 +25,13 @@ Match <%= match_string %>
 	#MaxAuthTries
 	#MaxSessions
 	#PubkeyAuthentication
-<% if authorizedkeyscommand -%>
+<% if @authorizedkeyscommand -%>
 	#AuthorizedKeysCommand none
-	AuthorizedKeysCommand		<%= authorizedkeyscommand %>
+	AuthorizedKeysCommand		<%= @authorizedkeyscommand %>
 <% end -%>
-<% if authorizedkeyscommandrunas != '' -%>
+<% if @authorizedkeyscommandrunas != '' -%>
 	#AuthorizedKeysCommandRunAs ''
-	AuthorizedKeysCommandRunAs	<%= authorizedkeyscommandrunas %>
+	AuthorizedKeysCommandRunAs	<%= @authorizedkeyscommandrunas %>
 <% end -%>
 	#PasswordAuthentication
 	#PermitEmptyPasswords
