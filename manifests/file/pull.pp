@@ -83,7 +83,7 @@ define ssh::file::pull(	# formerly named: recv; pull was easier to think about!
 		}
 	}
 
-	$options = "-pq -o 'PasswordAuthentication=no' -o 'StrictHostKeyChecking=yes'"
+	$options = "-q -o 'PasswordAuthentication=no' -o 'StrictHostKeyChecking=yes'"
 
 	# use the same mechanic to keep my own local copy of the file hashed...
 	# NOTE: if multiple users all want a file, it will cause a duplicate by
@@ -113,7 +113,7 @@ define ssh::file::pull(	# formerly named: recv; pull was easier to think about!
 	# this check repeats the process of running the local sha256sum. we can
 	# remove this redundant computation and trust the saved hash value, but
 	# since the mtime can block its generation, we play it extra safe here!
-	$ssh_check = "/usr/bin/test \"`/bin/cat '${valid_this}' | /usr/bin/sha256sum -`\" != \"`/usr/bin/ssh ${valid_user}@${valid_host} '/bin/cat ${valid_file} | /usr/bin/sha256sum -'`\""
+	$ssh_check = "/usr/bin/test \"`/bin/cat '${valid_this}' | /usr/bin/sha256sum -`\" != \"`/usr/bin/ssh ${options} ${valid_user}@${valid_host} '/bin/cat ${valid_file} | /usr/bin/sha256sum -'`\""
 
 	# we need to template this script because a one-liner would be very bad
 	$safename = regsubst("${name}", '/', '_', 'G')	# make /'s safe
@@ -133,7 +133,7 @@ define ssh::file::pull(	# formerly named: recv; pull was easier to think about!
 		require => File["${vardir}/file/"],
 	}
 
-	exec { "/usr/bin/scp ${options} ${valid_user}@${valid_host}:'${valid_file}' '${valid_this}'":
+	exec { "/usr/bin/scp -p ${options} ${valid_user}@${valid_host}:'${valid_file}' '${valid_this}'":
 		logoutput => on_failure,
 		provider => 'shell',
 		# if the exported hash matches the locally generated hash, then

@@ -119,7 +119,7 @@ define ssh::file::push(	# formerly named: send; push was easier to think about!
 		}
 	}
 
-	$options = "-pq -o 'PasswordAuthentication=no' -o 'StrictHostKeyChecking=yes'"
+	$options = "-q -o 'PasswordAuthentication=no' -o 'StrictHostKeyChecking=yes'"
 
 	# use the same mechanic to keep my own local copy of the file hashed...
 	# NOTE: if multiple users all want a file, it will cause a duplicate by
@@ -149,7 +149,7 @@ define ssh::file::push(	# formerly named: send; push was easier to think about!
 	# this check repeats the process of running the local sha256sum. we can
 	# remove this redundant computation and trust the saved hash value, but
 	# since the mtime can block its generation, we play it extra safe here!
-	$ssh_check = "/usr/bin/test \"`/bin/cat '${valid_file}' | /usr/bin/sha256sum -`\" != \"`/usr/bin/ssh ${valid_user}@${valid_host} '/bin/cat ${valid_that} | /usr/bin/sha256sum -'`\""
+	$ssh_check = "/usr/bin/test \"`/bin/cat '${valid_file}' | /usr/bin/sha256sum -`\" != \"`/usr/bin/ssh ${options} ${valid_user}@${valid_host} '/bin/cat ${valid_that} | /usr/bin/sha256sum -'`\""
 
 	# we need to template this script because a one-liner would be very bad
 	$safename = regsubst("${name}", '/', '_', 'G')	# make /'s safe
@@ -172,7 +172,7 @@ define ssh::file::push(	# formerly named: send; push was easier to think about!
 	# NOTE: if the source file that we're copying is missing, then this can
 	# be an error or it can be avoided and skip the exec. for now it errors
 	# if there is a reason to do it the other way, ping me to add an option
-	exec { "/usr/bin/scp ${options} '${valid_file}' ${valid_user}@${valid_host}:'${valid_that}'":
+	exec { "/usr/bin/scp -p ${options} '${valid_file}' ${valid_user}@${valid_host}:'${valid_that}'":
 		logoutput => on_failure,
 		provider => 'shell',
 		# if the exported hash matches the locally generated hash, then
