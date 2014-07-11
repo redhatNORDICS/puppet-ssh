@@ -37,14 +37,19 @@ define ssh::recv(	# recv...
 	#	tag => "ssh_host_key_${::fqdn}",
 	#	key => "${sshrsakey}",			# built-in puppet fact!
 	#}
-	@@sshkey { "${::fqdn}":
+	#@@sshkey { "${::fqdn}":
+	$params = {
 		# TODO: this could be all the ipaddresses seen instead!
 		#host_aliases => ["${::ipaddress}"],	# TODO: pick a smart ip
 		type => 'rsa',
-		tag => "ssh_host_key_${valid_name}",
+		xtag => "ssh_host_key_${valid_name}",
 		key => "${sshrsakey}",			# built-in puppet fact!
 		ensure => present,
 	}
+	# FIXME: puppet doesn't allow @@ in ensure_resource!
+	#ensure_resource('@@sshkey', "${::fqdn}", $params)
+	ensure_resource('ssh::recv::exported_sshkey', "${::fqdn}", $params)
+
 }
 
 # vim: ts=8
