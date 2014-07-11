@@ -90,7 +90,7 @@ define ssh::file::pull(	# formerly named: recv; pull was easier to think about!
 	# exported resources all clashing to add the same resource somewhere...
 	# to work around this puppet design bug, we use a wrapper to keep these
 	# types unique using ensure_resource and a unique (fake) wrapper $name!
-	ssh::file::hash::wrapper { "${::fqdn}_${valid_this}":
+	ssh::file::hash::wrapper { "${::fqdn}_${valid_this}_${name}":
 		realname => "${valid_this}",
 		verify => $verify,
 	}
