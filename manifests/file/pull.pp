@@ -194,7 +194,7 @@ define ssh::file::pull(	# formerly named: recv; pull was easier to think about!
 	}
 
 	# add a hash request on the src host, so it computes and exports one...
-	@@ssh::file::hash::wrapper { "__${::fqdn}_${valid_file}":	# __ !!
+	@@ssh::file::hash::wrapper { "__${::fqdn}_${valid_file}_${name}":	# __ !!
 		realname => "${valid_file}",	# complete path of file on host
 		tag => "${valid_host}",		# should usually be the fqdn...
 	}
